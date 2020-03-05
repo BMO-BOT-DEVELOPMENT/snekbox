@@ -16,5 +16,6 @@ jobs:
     steps:
       - template: ci/build.yml
       - template: ci/setup.yml
-      - template: ci/lint-test.yml
+      - template: ci/lint.yml
+      - template: ci/test.yml
       - template: ci/push.yml
