@@ -1,8 +1,23 @@
 steps:
+  # Create an executable shell script which replaces the original pipenv binary.
+  # The shell script ignores the first argument and executes the rest of the
+  # args as a command. It makes the `pipenv run flake8` command in the
+  # pre-commit hook work by circumventing pipenv entirely, which is too dumb to
+  # know it should use the system interpreter rather than creating a new venv.
   - script: |
-      docker exec snekbox_test /bin/bash -c \
-        'flake8; flake8 --format junit-xml --output-file test-lint.xml'
-    displayName: 'Run Linter'
+      cmd='printf '%s\n%s' '#!/bin/bash' '"${@:2}"' > /usr/local/bin/pipenv && '
+      cmd+='chmod +x /usr/local/bin/pipenv'
+      docker exec snekbox_test /bin/bash -c "${cmd}"
+    displayName: 'Mock pipenv binary'
+
+  # flake8 runs so it can generate the XML output. pre-commit will run it again
+  # to show stdout. flake8 standalone runs first to avoid any fixes pre-commit
+  # hooks may make.
+  - script: |
+      cmd='flake8 --format junit-xml --output-file test-lint.xml; '
+      cmd+='pre-commit run --all-files'
+      docker exec snekbox_test /bin/bash -c "${cmd}"
+    displayName: 'Run pre-commit hooks'
 
   - task: PublishTestResults@2
     displayName: 'Publish Lint Results'
