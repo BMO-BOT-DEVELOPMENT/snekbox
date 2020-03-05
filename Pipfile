@@ -45,7 +45,7 @@ unittest-xml-reporting = ">= 2.5.1, == 2.*"
 python_version = "3.8"
 
 [scripts]
-lint = "flake8"
+lint = "pre-commit run --all-files"
 precommit = "pre-commit install"
 test = "sh scripts/dev.sh -c 'pipenv run coverage run -m unittest'"
 testb = """

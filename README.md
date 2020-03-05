@@ -55,6 +55,8 @@ pipenv sync
 
 Follow that up with setting up the pre-commit hook:
 
+* [ShellCheck](https://github.com/koalaman/shellcheck#installing) is required for one of the pre-commit hooks!
+
 ```
 pipenv run precommit
 ```
