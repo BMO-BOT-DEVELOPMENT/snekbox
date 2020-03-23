@@ -17,6 +17,12 @@ steps:
         pythondiscord/snekbox-venv:latest
     displayName: 'Start Container'
 
+    # Needed for pre-commit.
+  - script: |
+      docker exec snekbox_test /bin/bash -c \
+        'apt-get -y update && apt-get install -y git=1:2.20.*'
+    displayName: 'Install Git'
+
   - script: |
       docker exec snekbox_test /bin/bash -c \
         'pipenv install --system --deploy --dev'
